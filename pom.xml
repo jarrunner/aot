@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.jarrunner</groupId>
+    <artifactId>aot</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <description>aot - the AOT training route for jr. Detects jr's cache-building run, force-loads the application's classes so the cache is trained on the whole app instead of whatever the user typed, and exits. Every jr-launched tool can have it in three lines.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>25</maven.compiler.release>
+    </properties>
+
+    <!--
+      NO DEPENDENCIES, deliberately and permanently.
+
+      This library is loaded on the startup path of every tool that uses it, and its entire purpose is
+      to make startup cheap. A dependency here would be loaded by every one of those tools before they
+      do anything, to run code whose job is to avoid exactly that cost. It also has to drop into apps
+      with incompatible logging and JSON stacks without an argument, which it can only do by having none.
+      The JDK is enough: this reads env vars, walks a classpath and calls Class.forName.
+    -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
