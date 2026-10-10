@@ -4,10 +4,36 @@
 
     <groupId>io.github.jarrunner</groupId>
     <artifactId>aot</artifactId>
-    <version>1.0</version>
+    <!-- A snapshot until the organisation has Maven Central release quota again (November 2026, or sooner if
+         Sonatype raises the limit). Published to https://central.sonatype.com/repository/maven-snapshots/ -->
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>aot</name>
     <description>aot - the AOT training route for jr. Detects jr's cache-building run, force-loads the application's classes so the cache is trained on the whole app instead of whatever the user typed, and exits. Every jr-launched tool can have it in three lines.</description>
+    <url>https://github.com/jarrunner/aot</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>jarrunner</id>
+            <name>Ivan Velikanov</name>
+            <email>ivan.velikanov.dev@gmail.com</email>
+            <url>https://github.com/jarrunner</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/jarrunner/aot.git</connection>
+        <developerConnection>scm:git:ssh://github.com:jarrunner/aot.git</developerConnection>
+        <url>https://github.com/jarrunner/aot</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,4 +59,79 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Publish to Maven Central: Maven 3 only, never the default Maven 4 (under Maven 4 the
+         central-publishing binding silently uploads nothing, and BUILD SUCCESS still prints):
+           mvn clean deploy (with a Maven 3 mvn) -Dorg.name=jarrunner
+         A -SNAPSHOT version goes to the snapshot repository (add -Dgpg.skip=true); a release version goes to
+         Central proper and counts against the organisation's monthly limits, so check usage first (jarrunner CLAUDE.md). -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property><name>org.name</name></property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals><goal>jar-no-fork</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.6.3</version>
+                        <configuration>
+                            <doclint>none</doclint>
+                            <additionalOptions>--no-fonts</additionalOptions>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals><goal>jar</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals><goal>sign</goal></goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <keyname>${org.gpg.keyname}</keyname>
+                            <passphrase>${org.gpg.passphrase}</passphrase>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.9.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>${org.publishing.server.id}</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
