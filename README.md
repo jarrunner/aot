@@ -1,8 +1,21 @@
-# aot — the AOT training route for jr
+<p align="center"><img src="https://jarrunner.github.io/jr-icon.svg" width="96" alt="jr"></p>
 
-The training payload that makes a `jr.exe` AOT cache worth having, so every tool can have it in three lines.
+# aot
 
-`jr` builds an AOT cache for any tool with `aot=true` in its `.jrc`. What it cannot do is decide **what goes
+Make your Java app's AOT cache worth having: train it on what your app really does, not on `--help`. A small, dependency-free companion library for [jr](https://github.com/jarrunner/jr), and useful without it.
+
+- **Faster startup that is real.** Measured on a desktop app: 6968 ms to 2126 ms (3.3x) with a cache trained by this library.
+- **No accidental slowdown.** A cache trained on a trivial path is slower than no cache at all, because naming a cache switches off the default CDS archive. This library loads your app on purpose during the training run.
+- **One line in `main`.** The rest is a short list of the packages and hot paths that matter to your app.
+- **No dependencies, permanently.** It sits on every startup path.
+
+**Try it:** today it is `1.0-SNAPSHOT` on the Central snapshot repository (add `https://central.sonatype.com/repository/maven-snapshots/` to your repositories), then follow [Use](#use) below.
+
+[jr](https://github.com/jarrunner/jr) · [jr-maven-plugin](https://github.com/jarrunner/jr-maven-plugin) · [jarrunner.github.io](https://jarrunner.github.io)
+
+## Why
+
+jr builds an AOT cache for an app on Java 25 or newer (unless its config says `aot=false`). What it cannot do is decide **what goes
 in it**: the JVM assembles the cache out of the classes the training run happened to load. If that run was
 `mytool --help`, the cache holds the help path and nothing else — and that is **worse than no cache at
 all**, because naming a cache also switches off the default CDS archive.
@@ -17,7 +30,7 @@ all**, because naming a cache also switches off the default CDS archive.
 <dependency>
     <groupId>io.github.jarrunner</groupId>
     <artifactId>aot</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -151,7 +164,7 @@ with a warning, never fatally, so a stale one can never break a run.
 
 **1. AOT needs a jar-only classpath.** The JVM refuses to dump a cache when the classpath contains a
 non-empty directory — `Cannot have non-empty directory in paths` — and writes nothing. This is why `jr`
-wires AOT up only for `-jar` launches: a JVM restriction, not a `jr` limitation. A `.jrc` saying `aot=true`
+wires AOT up only for `-jar` launches: a JVM restriction, not a `jr` limitation. A config saying `aot=true`
 while launching `-cp target\classes;lib\*` has silently never had a cache, however long it has claimed
 otherwise. `AotState.classpathBlocker()` names the offending entry, `describe()` prints it, and
 `runIfTraining()` warns instead of leaving you to a cryptic VM error.
