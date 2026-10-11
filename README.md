@@ -1,4 +1,4 @@
-<p align="center"><img src="https://jarrunner.github.io/jr-icon.svg" width="96" alt="jr"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/jarrunner/jr/main/icon/jr-icon.svg" width="96" alt="jr"></p>
 
 # aot
 
