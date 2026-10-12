@@ -6,7 +6,7 @@
     <artifactId>aot</artifactId>
     <!-- A snapshot until the organisation has Maven Central release quota again (November 2026, or sooner if
          Sonatype raises the limit). Published to https://central.sonatype.com/repository/maven-snapshots/ -->
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>aot</name>

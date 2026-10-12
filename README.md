@@ -9,7 +9,7 @@ Make your Java app's AOT cache worth having: train it on what your app really do
 - **One line in `main`.** The rest is a short list of the packages and hot paths that matter to your app.
 - **No dependencies, permanently.** It sits on every startup path.
 
-**Try it:** today it is `1.0-SNAPSHOT` on the Central snapshot repository (add `https://central.sonatype.com/repository/maven-snapshots/` to your repositories), then follow [Use](#use) below.
+**Try it:** it is on Maven Central as `io.github.jarrunner:aot:1.0`. Add the dependency below, then follow [Use](#use).
 
 [jr](https://github.com/jarrunner/jr) · [jr-maven-plugin](https://github.com/jarrunner/jr-maven-plugin) · [jarrunner.github.io](https://jarrunner.github.io)
 
@@ -30,7 +30,7 @@ all**, because naming a cache also switches off the default CDS archive.
 <dependency>
     <groupId>io.github.jarrunner</groupId>
     <artifactId>aot</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 
